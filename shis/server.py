@@ -8,6 +8,7 @@ import time
 from itertools import repeat
 from multiprocessing import cpu_count
 from typing import Dict, Tuple
+from natsort import natsorted
 
 import imagesize
 from tqdm import tqdm
@@ -174,6 +175,9 @@ def generate_albums(args: argparse.Namespace) -> Tuple[Dict, int]:
         if args.order == 'random':
             random.shuffle(files)
             random.shuffle(folders)
+        if args.order == 'nname':
+            files = natsorted(files)
+            folders = natsorted(folders)
 
         # Albums
         albums = []
@@ -375,7 +379,7 @@ def make_parser() -> argparse.ArgumentParser:
     parser.add_argument('-g', '--group', type=int, default=None, metavar='ITEMS',
         help='number of items to group together (default: %(default)s)')
     parser.add_argument('-o', '--order', default='name', metavar='ORDER',
-        choices = ['original', 'random', 'name'],
+        choices = ['original', 'random', 'name', 'nname'],
         help='image listing order: name (default), random, or original')
     parser.add_argument('--thumb-dir', default='shis', metavar='DIR',
         help='directory to store generated website (default: %(default)s)')
